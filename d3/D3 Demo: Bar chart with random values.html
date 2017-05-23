@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en"><head>
+<meta http-equiv="content-type" content="text/html; charset=UTF-8">
+		<meta charset="utf-8">
+		<title>D3 Demo: Bar chart with random values</title>
+		<script type="text/javascript" src="D3%20Demo:%20Bar%20chart%20with%20random%20values_files/d3.js"></script>
+		<style type="text/css">
+		
+			div.bar {
+				display: inline-block;
+				width: 20px;
+				height: 75px;	/* Gets overriden by D3-assigned height below */
+				margin-right: 2px;
+				background-color: teal;
+			}
+		
+		</style>
+	</head>
+	<body>
+		<script type="text/javascript">
+
+			var dataset = [];  						 //Initialize empty array
+			for (var i = 0; i < 25; i++) {			 //Loop 25 times
+				var newNumber = Math.random() * 30;  //New random number (0-30)
+				dataset = dataset.concat(newNumber); //Add new number to array
+			}
+			
+			d3.select("body").selectAll("div")
+				.data(dataset)
+				.enter()
+				.append("div")
+				.attr("class", "bar")
+				.style("height", function(d) {
+					var barHeight = d * 5;
+					return barHeight + "px";
+				});
+			
+		</script><div class="bar" style="height: 130.477px;"></div><div class="bar" style="height: 28.057px;"></div><div class="bar" style="height: 130.643px;"></div><div class="bar" style="height: 31.6454px;"></div><div class="bar" style="height: 69.4233px;"></div><div class="bar" style="height: 16.1847px;"></div><div class="bar" style="height: 19.995px;"></div><div class="bar" style="height: 84.7762px;"></div><div class="bar" style="height: 63.0244px;"></div><div class="bar" style="height: 75.8195px;"></div><div class="bar" style="height: 63.8165px;"></div><div class="bar" style="height: 96.1929px;"></div><div class="bar" style="height: 35.9745px;"></div><div class="bar" style="height: 92.9977px;"></div><div class="bar" style="height: 108.107px;"></div><div class="bar" style="height: 17.5896px;"></div><div class="bar" style="height: 106.498px;"></div><div class="bar" style="height: 135.444px;"></div><div class="bar" style="height: 60.0285px;"></div><div class="bar" style="height: 8.40489px;"></div><div class="bar" style="height: 42.9153px;"></div><div class="bar" style="height: 70.7638px;"></div><div class="bar" style="height: 88.5883px;"></div><div class="bar" style="height: 5.21821px;"></div><div class="bar" style="height: 75.96px;"></div>
+	
+</body></html>
