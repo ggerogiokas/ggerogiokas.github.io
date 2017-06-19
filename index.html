@@ -1,93 +1,235 @@
-<!DOCTYPE html>
 <html>
+
 <head>
-<style>
-input[type=text] {
-    width: 200px;
-    box-sizing: border-box;
-    border: 2px solid #ccc;
-    border-radius: 4px;
-    font-size: 18px;
-    background-color: white;
-    background-image: url('searchicon.png');
-    background-position: 10px 10px;
-    background-repeat: no-repeat;
-    padding: 12px 20px 12px 40px;
-    -webkit-transition: width 0.4s ease-in-out;
-    transition: width 0.4s ease-in-out;
-}
+  <title>Sample</title>
+  <meta name="viewport" content="width=device-width, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0">
+  <style>
+    #viewer {
+      width : 100%;
+      height : 60%;
+      margin: 0 auto;
+      position: absolute;
+      /*overflow:hidden;*/
+      /*margin: auto;*/
+    }
 
-input[type=text]:focus {
-    width: 100%;
-}
-h {
-  font-size: 40px;
-  color: red;
-}
+  </style>
+  <style>
+    #d3_barplot {
+      margin: auto;
+    }
+  </style>
+  <script type='text/javascript' src='bio-pv.min.js'></script>
+  <script   src="https://code.jquery.com/jquery-3.1.1.min.js"   integrity="sha256-hVVnYaiADRTO2PzUGmuLJr8BLUSjGIZsDYGmIJLv2b8="   crossorigin="anonymous"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
 
-p {
-  /*border-bottom:1px dotted;
-  margin-left: 'auto';
-  margin-right: 'auto';*/
-  font-size: 1.3em;
-  text-align: left;
-  width: 50em; /* whatever width you want */
-}
+  <script type="text/javascript" src="./d3.js"></script>
 
-UL {
-  font-size: 1.2em;
-}
-
-</style>
-
-<script   src="https://code.jquery.com/jquery-3.1.1.min.js"   integrity="sha256-hVVnYaiADRTO2PzUGmuLJr8BLUSjGIZsDYGmIJLv2b8="   crossorigin="anonymous"></script>
-
-<script type="text/javascript">
-function handleThis(formElm)
-	{
-  // console.log(formElm);
-	window.location="http://ggerogiokas.github.io/"+document.getElementById("form_1").value+'html';
-	return false;
-	}
-</script>
+  <style type="text/css">
+    div.bar {
+    display: inline-block;
+    width: 20px;
+    height: 100px;   /* We'll override this later */
+    background-color: teal;
+    margin-right: 2px;
+    }
+    svg text{
+          pointer-events: none;
+    }
+  </style>
 
 </head>
+
 <body>
+  <h1 align="center"> FXa protein </h1>
+  <a href="prod_minitraj_ENDMDL.pdb">Download pdb data</a>
+  <a href="json_example.json">Download metadata</a>
 
-<h>
-  PCCB (Protein Centroid Conformer Bank)
-</h>
+  <div align="center" id="d3_barplot">
+    <script type="text/javascript">
 
-<p align="center">
-  In the PCCB we are aiming to store major conformers discovered through out molecular
-  simulation.  These are generated either through molecular dynamics or monte carlo methods.
+    function getFields(input, field) {
+        //console.log('I am alive');
+        //console.log(input);
+        //console.log(field);
+        var output = [];
+        var i;
+        //console.log('input length: ' + input.length)
+        for (i=0; i < input.length; i++) {
+            //console.log('here here: ' + i );
+            //console.log(input[i][field]);
+            output.push(input[i][field]);
+        }
+        //console.log(output);
+        return output;
+    }
 
-  The major conformers from systems simulated typically are derived from a simulation ran from
-  an initial protein conformation derived from the protein data bank.
+    var predata = [];
+    var dataset = [];
+    d3.csv("dat.csv", function(data) {
+      data.forEach(function(d) {
+        d.clusters = +d.clusters;
+        predata.push(d);
+      });
+      // extract just the values for dataset
+      dataset = getFields(predata, 'clusters');
+      updateBars();
+    });
 
-  These conformers are useful for various reasons.  They represent the major conformations (large percentages of the simulation time)
-  observed throughout the simulation.  Significantly large conformations may be stabilised by ligands of interest.
+    function updateBars() {
+      var count = -1;
+      var count2 = -1;
 
-  Uses include:
-</p>
+      //Width and height
+      var w = 400;
+      var h = 250;
+      var barPadding = 1;
 
-<UL>
-    <LI> These conformers for instance could be utilised for multi-receptor docking.
-    <LI> Starting points for molecular dynamics or monte carlo.
-    <LI> Creation of community free energy landscapes for systems backed by
-         reproducible science.
-  </UL>
+      //Create SVG element
+      var svg = d3.select("#d3_barplot")
+            .append("svg")
+            .attr("width", w)
+            .attr("height", h);
 
-  <form onsubmit="return handleThis(this)">
-    <input id="form_1" type="text" placeholder="Search pdb id" list="pdb_ids" />
-    <datalist id="pdb_ids">
-      <option>1ABC</option>
-      <option>2RDF</option>
-    </datalist>
-  </form>
-<!-- <form>
-  <input type="text" name="search" placeholder="Search pdb id">
-</form> -->
+      svg.selectAll("rect")
+         .data(dataset)
+         .enter()
+         .append("rect")
+         .attr("x", function(d, i) {
+            return i * (w / dataset.length);
+         })
+         .attr("y", function(d) {
+            return h - (d * 2);
+         })
+         .attr("width", w / dataset.length - barPadding)
+         .attr("height", function(d) {
+            return d * 2;
+         })
+         .attr("fill", function(d) {
+          return "rgb(0, 0, " + (d * 10) + ")";
+         })
+         .attr("id", function(d) {
+           count = count + 1;
+           return count;
+         })
+         .on('click', function(d){
+           count2 = count2 + 1;
+           btnSNAP(count2);
+         }, true);
+
+      svg.selectAll("text")
+         .data(dataset)
+         .enter()
+         .append("text")
+         .text(function(d) {
+            return d+'%';
+         })
+         .attr("text-anchor", "middle")
+         .attr("x", function(d, i) {
+            return i * (w / dataset.length) + (w / dataset.length - barPadding) / 2;
+         })
+         .attr("y", function(d) {
+            return h - (d * 2) + 14;
+         })
+         .attr("font-family", "sans-serif")
+         .attr("font-size", "11px")
+         .attr("fill", "white");
+
+    }
+
+    </script>
+  </div>
+
+  <script type="text/javascript">
+    $('svg').css({top: 200, left: 200, position:'absolute'});
+  </script>
+
+  <div id=viewer></div>
+
+  <script type="text/javascript" >
+
+
+    // override the default options with something less restrictive.
+    var options = {
+      width: 'auto',
+      height: 'auto',
+      antialias: true,
+      quality : 'medium'
+    };
+
+    // insert the viewer under the Dom element with id 'viewer'.
+    var viewer = pv.Viewer(document.getElementById('viewer'), options);
+
+    var ENSEMBLE = null;
+    var activeIndex = 0;
+
+
+    viewer.on('viewerReady', function() {
+      io.fetchPdb('prod_minitraj_ENDMDL.pdb', function(structures) {
+        viewer.clear()
+        var i = 0;
+        ENSEMBLE = structures.map(function(a) {
+          pv.mol.assignHelixSheet(a);
+          // if (i > 0) {
+          //  return viewer.cartoon('ensemble.' + i++, a, { pv.color.uniform('blue') });
+          // } else {
+          return viewer.cartoon('ensemble.' + i++, a, {
+            //if (i === 0) {
+              color: pv.color.bySS()
+            //} else {
+            //  color: pv.color.uniform('blue')
+          });
+          // }
+        });
+        updateVisibility();
+        viewer.autoZoom();
+      }, { loadAllModels : true } );
+    });
+
+    function updateVisibility() {
+      //console.log(ENSEMBLE, activeIndex);
+      ENSEMBLE.forEach(function(a, i) {
+        if (i == activeIndex){
+          a.show()
+          if (i === 1) {
+            a.colorBy( pv.color.uniform("blue") )
+          } else {
+            a.colorBy( pv.color.bySS() )
+          }
+        } else {
+          a.hide()
+        }
+      });
+      //ENSEMBLE[activeIndex].show();
+      viewer.requestRedraw();
+    }
+
+    function btnSNAP(val) {
+        //console.log(strval, val);
+        document.getElementById(val.toString()).addEventListener("click", function(){
+            activeIndex = val;
+            updateVisibility();
+        });
+    }
+
+    function btnFWD() {
+      document.getElementById("forward").addEventListener("click", function(){
+          activeIndex = (activeIndex + 1)  % ENSEMBLE.length;
+          updateVisibility();
+      });
+    }
+
+    function btnBWD() {
+      document.getElementById("backward").addEventListener("click", function(){
+          // make sure we never calculate modulo on negative value
+          activeIndex = (activeIndex - 1 + ENSEMBLE.length)  % ENSEMBLE.length;
+          updateVisibility();
+      });
+    }
+  </script>
+
+
 
 </body>
+
 </html>
