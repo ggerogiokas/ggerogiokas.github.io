@@ -165,7 +165,7 @@
 
 
     viewer.on('viewerReady', function() {
-      io.fetchPdb('./prod_minitraj_ENDMDL.pdb', function(structures) {
+      io.fetchPdb('prod_minitraj_ENDMDL.pdb', function(structures) {
         viewer.clear()
         var i = 0;
         ENSEMBLE = structures.map(function(a) {
