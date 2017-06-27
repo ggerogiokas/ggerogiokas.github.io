@@ -1,37 +1,35 @@
 {
-"initial_structure": { "structure_origin": "X-ray structure",
-  "experimental_origin": "bacteria",
-  "pdb": 1IAK },
+"initial_structure": { "structure_origin": "X-RAY DIFFRACTION ",
+  "experimental_origin": "Caenorhabditis elegans ",
+  "pdb": "4F4C" },
 
 "clustering": { "type_of_clustering": "RMSD clustering",
   "number_of_clusters": 2,
-  "cluster_percentages": "75,25",
+  "cluster_percentages": "95,4",
   "cutoff_parameters" : "0.05 Angstrom",
   "cluster_coordinates_file": "clusters.pdb" },
 
 "MD_parms": { "MD_engine": "Gromacs",
-  "thermostat": "Andersen",
-  "barostat": "Parinello-Rahman",
-  "temperature": 298,
+  "thermostat": "See setup_file",
+  "barostat": "See setup_file",
+  "temperature": "See setup_file",
   "LJ_cutoffs": "See setup_file",
   "long_range_cutoffs": "See setup_file",
   "setup_file": "md.mdp" },
 
-"system_description": { "protein_name": "FXa",
-  "protein_sequence": "FGHKLLKLK",
-  "types_of_ions": "NA,CL",
-  "num_of_ions_type": "2,3",
-  "concentration_of_ion_type": "0.1nM,0.1nM",
-  "metals": "Fe2+",
-  "lipid_types": "POPC, cardiolipin",
-  "lipid_ratios": "2:1",
-  "nonstandard_residues": "LIG,LIG2",
-  "chemical_names_residues": "Benzene,Phenol",
-  "residue_initials": "LIG,LIG2",
-  "partial_charge_method" : "AM1-BCC",
-  "torsional_prediction_method": "GAFF forcefield" },
+"system_description": { "protein_name": "multidrug transporter P-glycoprotein",
+  "protein_sequence": "See PDB",
+  "types_of_ions": "See setup_file",
+  "num_of_ions_type": "See PDB file",
+  "concentration_of_ion_type": "See setup_file",
+  "metals": "None",
+  "lipid_types": "See setup_file",
+  "lipid_ratios": "See setup_file",
+  "nonstandard_residues": "See setup_file",
+  "chemical_names_residues": "See setup_file",
+  "residue_initials": "See setup_file",
+  "partial_charge_method" : "See setup_file",
+  "torsional_prediction_method": "See setup_file"},
 
-"reference_DOI" : doi_code
+"reference_DOI" : 10.1042/BST20150125
 }
-
-
