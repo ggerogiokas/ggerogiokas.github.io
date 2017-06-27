@@ -41,26 +41,19 @@
 </head>
 
 <body>
-  <h1 align="center"> FXa protein </h1>
-  <a href="prod_minitraj_ENDMDL.pdb">Download pdb data</a>
+  <h1 align="center"> 1ABC </h1>
+  <a href="clusters.pdb">Download pdb data</a>
   <a href="json_example.json">Download metadata</a>
 
   <div align="center" id="d3_barplot">
     <script type="text/javascript">
 
     function getFields(input, field) {
-        //console.log('I am alive');
-        //console.log(input);
-        //console.log(field);
         var output = [];
         var i;
-        //console.log('input length: ' + input.length)
         for (i=0; i < input.length; i++) {
-            //console.log('here here: ' + i );
-            //console.log(input[i][field]);
             output.push(input[i][field]);
         }
-        //console.log(output);
         return output;
     }
 
@@ -165,21 +158,14 @@
 
 
     viewer.on('viewerReady', function() {
-      io.fetchPdb('prod_minitraj_ENDMDL.pdb', function(structures) {
+      io.fetchPdb('clusters.pdb', function(structures) {
         viewer.clear()
         var i = 0;
         ENSEMBLE = structures.map(function(a) {
           pv.mol.assignHelixSheet(a);
-          // if (i > 0) {
-          //  return viewer.cartoon('ensemble.' + i++, a, { pv.color.uniform('blue') });
-          // } else {
           return viewer.cartoon('ensemble.' + i++, a, {
-            //if (i === 0) {
               color: pv.color.bySS()
-            //} else {
-            //  color: pv.color.uniform('blue')
           });
-          // }
         });
         updateVisibility();
         viewer.autoZoom();
@@ -187,15 +173,10 @@
     });
 
     function updateVisibility() {
-      //console.log(ENSEMBLE, activeIndex);
       ENSEMBLE.forEach(function(a, i) {
         if (i == activeIndex){
           a.show()
-          if (i === 1) {
-            a.colorBy( pv.color.uniform("blue") )
-          } else {
-            a.colorBy( pv.color.bySS() )
-          }
+          a.colorBy( pv.color.bySS() )
         } else {
           a.hide()
         }
@@ -210,21 +191,6 @@
             activeIndex = val;
             updateVisibility();
         });
-    }
-
-    function btnFWD() {
-      document.getElementById("forward").addEventListener("click", function(){
-          activeIndex = (activeIndex + 1)  % ENSEMBLE.length;
-          updateVisibility();
-      });
-    }
-
-    function btnBWD() {
-      document.getElementById("backward").addEventListener("click", function(){
-          // make sure we never calculate modulo on negative value
-          activeIndex = (activeIndex - 1 + ENSEMBLE.length)  % ENSEMBLE.length;
-          updateVisibility();
-      });
     }
   </script>
 
